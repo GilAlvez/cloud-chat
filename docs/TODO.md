@@ -7,7 +7,7 @@
   [x] SignUp w/ Phone Number
   [ ] SignIn w/ Phone Number
   [ ] Recover Phone Number
-  [ ] Validate Phone Number
+  [x] Validate Phone Number
 
 - Must-Have
   [ ] 2 Steps Auth
@@ -50,5 +50,5 @@
 
 # Others
 
-- Documentation
-  [ ] AWS SNS Sandbox
+[ ] AWS SNS Sandbox
+[ ] Zod Schemas

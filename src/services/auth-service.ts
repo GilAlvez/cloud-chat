@@ -1,12 +1,14 @@
 import { cognitoClient } from "@/libs/cognito-client";
+import { type ConfirmAccountParams } from "@/types/confirm-account-params";
 import { type CreateUserParams } from "@/types/create-user-params";
 import {
   type CognitoIdentityProviderClient,
+  ConfirmSignUpCommand,
   SignUpCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 
 export class AuthService {
-  private static readonly cognitoClientID = process.env.COGNITO_CLIENT_ID;
+  private readonly cognitoClientID = process.env.COGNITO_CLIENT_ID;
   private readonly client: CognitoIdentityProviderClient;
 
   constructor(client?: CognitoIdentityProviderClient) {
@@ -15,7 +17,7 @@ export class AuthService {
 
   public async signUp(params: CreateUserParams): Promise<string | undefined> {
     const command = new SignUpCommand({
-      ClientId: AuthService.cognitoClientID,
+      ClientId: this.cognitoClientID,
       Username: params.phone_number,
       Password: params.password,
       UserAttributes: [{ Name: "name", Value: params.name }],
@@ -24,5 +26,15 @@ export class AuthService {
     const { UserSub } = await this.client.send(command);
 
     return UserSub;
+  }
+
+  public async confirmAccount(params: ConfirmAccountParams): Promise<void> {
+    const command = new ConfirmSignUpCommand({
+      ClientId: this.cognitoClientID,
+      Username: params.phone_number,
+      ConfirmationCode: params.code,
+    });
+
+    await this.client.send(command);
   }
 }
