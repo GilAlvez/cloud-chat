@@ -63,6 +63,12 @@ functions:
       - httpApi:
           path: /auth/account-confirmation
           method: post
+  sign-in:
+    handler: src/functions/sign-in.handler
+    events:
+      - httpApi:
+          path: /auth/sign-in
+          method: post
 
 resources:
   Resources:

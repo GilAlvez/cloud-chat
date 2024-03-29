@@ -1,4 +1,4 @@
 export type ConfirmAccountParams = {
-  phone_number: string;
+  phoneNumber: string;
   code: string;
 };

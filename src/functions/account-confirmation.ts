@@ -1,21 +1,16 @@
 import { AuthService } from "@/services/auth-service";
+import { type HandlerFunction } from "@/types/handler-function";
 import { bodyParser } from "@/utils/body-parser";
 import { response } from "@/utils/response";
 import { CognitoIdentityProviderServiceException } from "@aws-sdk/client-cognito-identity-provider";
-import {
-  type APIGatewayProxyEventV2,
-  type APIGatewayProxyResultV2,
-} from "aws-lambda";
 
-export async function handler(
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2> {
+export const handler: HandlerFunction = async (event) => {
   try {
     const body = bodyParser(event.body);
     const auth = new AuthService();
 
     await auth.confirmAccount({
-      phone_number: body.phone_number,
+      phoneNumber: body.phone_number,
       code: body.code,
     });
 
@@ -27,4 +22,4 @@ export async function handler(
 
     throw error;
   }
-}
+};
