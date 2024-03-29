@@ -1,4 +1,10 @@
-export type SignInParams = {
-  phoneNumber: string;
-  password: string;
-};
+export type SignInParams =
+  | {
+      flow: "password";
+      phoneNumber: string;
+      password: string;
+    }
+  | {
+      flow: "refreshToken";
+      token: string;
+    };

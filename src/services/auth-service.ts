@@ -42,13 +42,26 @@ export class AuthService {
   }
 
   public async signIn(params: SignInParams): Promise<SignInResponse> {
+    const authFlow = {
+      password: "USER_PASSWORD_AUTH",
+      refreshToken: "REFRESH_TOKEN_AUTH",
+    } as const;
+
+    const authParams: Record<string, string> = {};
+    switch (params.flow) {
+      case "password":
+        authParams.USERNAME = params.phoneNumber;
+        authParams.PASSWORD = params.password;
+        break;
+      case "refreshToken":
+        authParams.REFRESH_TOKEN = params.token;
+        break;
+    }
+
     const command = new InitiateAuthCommand({
       ClientId: this.cognitoClientID,
-      AuthFlow: "USER_PASSWORD_AUTH",
-      AuthParameters: {
-        USERNAME: params.phoneNumber,
-        PASSWORD: params.password,
-      },
+      AuthFlow: authFlow[params.flow],
+      AuthParameters: authParams,
     });
 
     const { AuthenticationResult } = await this.client.send(command);

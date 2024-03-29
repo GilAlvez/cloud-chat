@@ -7,16 +7,15 @@ import { CognitoIdentityProviderServiceException } from "@aws-sdk/client-cognito
 export const handler: HandlerFunction = async (event) => {
   try {
     const body = bodyParser(event.body);
-
     const auth = new AuthService();
-    const { accessToken, refreshToken } = await auth.signIn({
-      phoneNumber: body.phone_number,
-      password: body.password,
+
+    const { accessToken } = await auth.signIn({
+      flow: "refreshToken",
+      token: body.refresh_token,
     });
 
     return response(200, {
       access_token: accessToken,
-      refresh_token: refreshToken,
     });
   } catch (error) {
     if (error instanceof CognitoIdentityProviderServiceException) {

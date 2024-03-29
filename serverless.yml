@@ -69,6 +69,12 @@ functions:
       - httpApi:
           path: /auth/sign-in
           method: post
+  refresh-token:
+    handler: src/functions/refresh-token.handler
+    events:
+      - httpApi:
+          path: /auth/refresh-token
+          method: post
 
 resources:
   Resources:
