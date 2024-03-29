@@ -4,7 +4,7 @@
 # Authentication
 
 - Required
-  [ ] SignUp w/ Phone Number
+  [x] SignUp w/ Phone Number
   [ ] SignIn w/ Phone Number
   [ ] Recover Phone Number
   [ ] Validate Phone Number
@@ -47,3 +47,8 @@
   [ ] Preferences
   [ ] Block Other Users
   [ ] Remove Account
+
+# Others
+
+- Documentation
+  [ ] AWS SNS Sandbox
