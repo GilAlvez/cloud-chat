@@ -47,10 +47,12 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource: !GetAtt CloudChatTable.Arn
+  environment:
+    COGNITO_CLIENT_ID: !Ref CloudChatUserPoolClient
 
 functions:
   signUp:
-    handler: src/functions/signUp.handler
+    handler: src/functions/sign-up.handler
     events:
       - httpApi:
           path: /auth/sign-up
@@ -133,3 +135,17 @@ resources:
             RequireSymbols: true
             RequireUppercase: true
             TemporaryPasswordValidityDays: 1
+
+    CloudChatUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: cloud-chat-user-pool-client
+        UserPoolId: !Ref CloudChatUserPool
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        TokenValidityUnits:
+          AccessToken: days
+          RefreshToken: days
+        AccessTokenValidity: 1
+        RefreshTokenValidity: 1
