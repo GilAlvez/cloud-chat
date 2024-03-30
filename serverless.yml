@@ -40,6 +40,10 @@ provider:
       statements:
         - Effect: Allow
           Action:
+            - cognito-idp:AdminGetUser
+          Resource: !GetAtt CloudChatUserPool.Arn
+        - Effect: Allow
+          Action:
             - dynamodb:Query
             - dynamodb:Scan
             - dynamodb:GetItem
@@ -47,8 +51,17 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource: !GetAtt CloudChatTable.Arn
+  httpApi:
+    authorizers:
+      CloudChatAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: !GetAtt CloudChatUserPool.ProviderURL
+        audience:
+          - !Ref CloudChatUserPoolClient
   environment:
     COGNITO_CLIENT_ID: !Ref CloudChatUserPoolClient
+    COGNITO_POOL_ID: !Ref CloudChatUserPool
 
 functions:
   sign-up:
@@ -75,6 +88,14 @@ functions:
       - httpApi:
           path: /auth/refresh-token
           method: post
+  profile:
+    handler: src/functions/profile.handler
+    events:
+      - httpApi:
+          path: /profile
+          method: get
+          authorizer:
+            name: CloudChatAuthorizer
 
 resources:
   Resources:

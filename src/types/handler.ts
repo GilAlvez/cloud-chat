@@ -3,6 +3,6 @@ import {
   type APIGatewayProxyResultV2,
 } from "aws-lambda";
 
-export type HandlerFunction = (
+export type Handler = (
   event: APIGatewayProxyEventV2,
 ) => Promise<APIGatewayProxyResultV2>;

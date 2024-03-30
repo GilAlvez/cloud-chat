@@ -1,11 +1,11 @@
 import { CognitoIdentityProviderServiceException } from "@aws-sdk/client-cognito-identity-provider";
 
 import { AuthService } from "@/services/auth-service";
-import { type HandlerFunction } from "@/types/handler-function";
+import { type Handler } from "@/types/handler";
 import { bodyParser } from "@/utils/body-parser";
 import { response } from "@/utils/response";
 
-export const handler: HandlerFunction = async (event) => {
+export const handler: Handler = async (event) => {
   try {
     const body = bodyParser(event.body);
 
