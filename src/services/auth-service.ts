@@ -1,11 +1,14 @@
 import { cognitoClient } from "@/libs/cognito-client";
 import { type ConfirmAccountParams } from "@/types/confirm-account-params";
+import { type ResetPasswordParams } from "@/types/reset-password-params";
 import { type SignInParams } from "@/types/sign-in-params";
 import { type SignInResponse } from "@/types/sign-in-response";
 import { type SignUpParams } from "@/types/sign-up-params";
 import {
   type CognitoIdentityProviderClient,
+  ConfirmForgotPasswordCommand,
   ConfirmSignUpCommand,
+  ForgotPasswordCommand,
   InitiateAuthCommand,
   SignUpCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
@@ -70,5 +73,25 @@ export class AuthService {
       accessToken: AuthenticationResult?.AccessToken ?? "",
       refreshToken: AuthenticationResult?.RefreshToken ?? "",
     };
+  }
+
+  public async forgotPassword(phoneNumber: string): Promise<void> {
+    const command = new ForgotPasswordCommand({
+      ClientId: this.cognitoClientID,
+      Username: phoneNumber,
+    });
+
+    await this.client.send(command);
+  }
+
+  public async resetPassword(params: ResetPasswordParams): Promise<void> {
+    const command = new ConfirmForgotPasswordCommand({
+      ClientId: this.cognitoClientID,
+      Username: params.phoneNumber,
+      ConfirmationCode: params.code,
+      Password: params.password,
+    });
+
+    await this.client.send(command);
   }
 }

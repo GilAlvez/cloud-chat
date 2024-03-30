@@ -5,8 +5,8 @@
 
 - Required
   [x] SignUp w/ Phone Number
-  [ ] SignIn w/ Phone Number
-  [ ] Recover Phone Number
+  [x] SignIn w/ Phone Number
+  [x] Recover Phone Number
   [x] Validate Phone Number
 
 - Must-Have
@@ -38,7 +38,7 @@
 # Profile
 
 - Required
-  [ ] Get User Info
+  [x] Get User Info
   [ ] Profile Photo
   [ ] Change User Info
   [ ] Status (Manually Changed)

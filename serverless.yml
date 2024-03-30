@@ -88,6 +88,18 @@ functions:
       - httpApi:
           path: /auth/refresh-token
           method: post
+  forgot-password:
+    handler: src/functions/forgot-password.handler
+    events:
+      - httpApi:
+          path: /auth/forgot-password
+          method: post
+  reset-password:
+    handler: src/functions/reset-password.handler
+    events:
+      - httpApi:
+          path: /auth/reset-password
+          method: post
   profile:
     handler: src/functions/profile.handler
     events:
