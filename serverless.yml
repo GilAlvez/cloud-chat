@@ -28,7 +28,7 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
-
+  tableName: cloud-chat-${sls:stage}
 provider:
   name: aws
   runtime: nodejs20.x
@@ -62,6 +62,7 @@ provider:
   environment:
     COGNITO_CLIENT_ID: !Ref CloudChatUserPoolClient
     COGNITO_POOL_ID: !Ref CloudChatUserPool
+    DYNAMODB_TABLE: ${self:custom.tableName}
 
 functions:
   sign-up:
@@ -108,6 +109,38 @@ functions:
           method: get
           authorizer:
             name: CloudChatAuthorizer
+  create-room:
+    handler: src/functions/create-room.handler
+    events:
+      - httpApi:
+          path: /chat/rooms
+          method: post
+          authorizer:
+            name: CloudChatAuthorizer
+  list-rooms:
+    handler: src/functions/list-rooms.handler
+    events:
+      - httpApi:
+          path: /chat/rooms
+          method: get
+          authorizer:
+            name: CloudChatAuthorizer
+  create-message:
+    handler: src/functions/create-message.handler
+    events:
+      - httpApi:
+          path: /chat/messages
+          method: post
+          authorizer:
+            name: CloudChatAuthorizer
+  list-room-messages:
+    handler: src/functions/list-room-messages.handler
+    events:
+      - httpApi:
+          path: /chat/messages/{roomId}
+          method: get
+          authorizer:
+            name: CloudChatAuthorizer
 
 resources:
   Resources:
@@ -115,7 +148,7 @@ resources:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: cloud-chat
+        TableName: ${self:custom.tableName}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id
