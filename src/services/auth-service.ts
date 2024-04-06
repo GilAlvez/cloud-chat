@@ -14,8 +14,8 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 
 export class AuthService {
-  private readonly cognitoClientID = process.env.COGNITO_CLIENT_ID;
   private readonly client: CognitoIdentityProviderClient;
+  private readonly cognitoClientID = process.env.COGNITO_CLIENT_ID;
 
   constructor(client?: CognitoIdentityProviderClient) {
     this.client = client ?? cognitoClient;
