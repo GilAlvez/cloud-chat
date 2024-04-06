@@ -1,4 +1,3 @@
 export type CreateRoomParams = {
-  userIds: string[];
-  name?: string;
+  participants: [string, string];
 };

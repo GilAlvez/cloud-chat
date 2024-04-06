@@ -6,8 +6,9 @@ export class ChatService {
   private readonly client: DynamoDBDocumentClient;
   private readonly tableName = process.env.DYNAMODB_TABLE;
   private readonly prefix = {
-    roomId: "ROOM:",
-    roomKey: "INFO:",
+    RoomPK: "Room:",
+    RoomSK: "Metadata:",
+    MessageSK: "Message:",
   };
 
   constructor(client?: DynamoDBDocumentClient) {
@@ -15,14 +16,14 @@ export class ChatService {
   }
 
   public async createRoom(
-    userIds: string[],
+    participants: [string, string],
   ): Promise<Record<string, any> | undefined> {
     const command = new PutCommand({
       TableName: this.tableName,
       Item: {
-        id: this.prefix.roomId + randomUUID(),
-        key: this.prefix.roomKey,
-        users: userIds,
+        pk: this.prefix.RoomPK + randomUUID(),
+        sk: this.prefix.RoomSK,
+        participants,
         created_at: new Date().toISOString(),
       },
     });
