@@ -1,72 +1,76 @@
-<!--
-title: 'AWS NodeJS Example'
-description: 'This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework.'
-layout: Doc
-framework: v3
-platform: AWS
-language: nodeJS
-priority: 1
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# Cloud Chat - Serverless Chat Application
 
+Cloud Chat is a simple chat application built using the Serverless Framework on AWS, leveraging services like AWS Lambda, DynamoDB, and Cognito for authentication. This project demonstrates the creation and management of chat rooms, sending and listing text messages, and user profile management.
 
-# Serverless Framework AWS NodeJS Example
+## Features
 
-This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework. The deployed function does not include any event definitions as well as any kind of persistence (database). For more advanced configurations check out the [examples repo](https://github.com/serverless/examples/) which includes integrations with SQS, DynamoDB or examples of functions that are triggered in `cron`-like manner. For details about configuration of specific `events`, please refer to our [documentation](https://www.serverless.com/framework/docs/providers/aws/events/).
+- **Authentication**
 
-## Usage
+  - Sign up and sign in using phone number.
+  - Phone number recovery and validation.
+  - _Upcoming implementations_: Two-step authentication, email authentication, social authentication.
 
-### Deployment
+- **Chat**
 
-In order to deploy the example, you need to run the following command:
+  - Creation and listing of chat rooms.
+  - Sending and listing of text messages per room.
+  - _Upcoming implementations_: Support for message types such as file, audio, video, image; message status; deleting message content; typing indicator; notifications; replying to messages; editing messages; deleting messages; creating and managing group rooms.
 
-```
-$ serverless deploy
-```
+- **Profile**
+  - Retrieving user information.
+  - Updating profile information, including profile photo.
+  - _Upcoming implementations_: Changing status manually, user preferences, blocking other users, removing account.
 
-After running deploy, you should see output similar to:
+## Architecture
 
-```bash
-Deploying aws-node-project to stage dev (us-east-1)
+The project is based on a serverless architecture, with Lambda functions responsible for handling backend operations. Data persistence is performed in DynamoDB, and Cognito is used to manage user authentication and authorization.
 
-✔ Service deployed to stack aws-node-project-dev (112s)
+### Main Components
 
-functions:
-  hello: aws-node-project-dev-hello (1.5 kB)
-```
+- **AWS Lambda**: Serverless functions that execute the application's backend logic.
+- **AWS DynamoDB**: A NoSQL database that stores data for chat rooms and messages.
+- **AWS Cognito**: An authentication service that manages users and sessions, using phone number as the primary authentication method and also performs token validation using API Gateway authorizers
 
-### Invocation
+### Project Structure
 
-After successful deployment, you can invoke the deployed function by using the following command:
-
-```bash
-serverless invoke --function hello
-```
-
-Which should result in response similar to the following:
-
-```json
-{
-    "statusCode": 200,
-    "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": {}\n}"
-}
+```plaintext
+/
+├── src/
+│   ├── functions/       # Lambda functions for specific operations
+│   ├── services/        # Scope-structured logic: e.g. auth, chat, profile...
+│   ├── types/           # Types and interfaces
+│   ├── libs/            # Shared libraries and AWS client configurations
+│   └── utils/           # Utilities and helpers like parsers
+├── serverless.yml       # Serverless Framework configuration
+└── package.json
 ```
 
-### Local development
+## Getting Started
 
-You can invoke your function locally by using the following command:
+### Prerequisites
 
-```bash
-serverless invoke local --function hello
-```
+- Node.js 20
+- Configured AWS CLI
+- Serverless Framework
 
-Which should result in response similar to the following:
+### Setup and Deployment
 
-```
-{
-    "statusCode": 200,
-    "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
-```
+1. Install the project dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Deploy the application to AWS:
+
+   ```bash
+   serverless deploy
+   ```
+
+### Usage
+
+- **User registration**: Use the `/auth/sign-up` endpoint with a phone number to register a new user.
+- **Validate account**: on endpoint `/auth/account-confirmation` it is possible to pass the necessary authentication token
+- **Login**: After validation, use the `/auth/sign-in` endpoint to log in.
+- **Creating chat rooms**: Once authenticated, use the `/chat/rooms` endpoint to create a new room passing the id of two registered users.
+- **Sending messages**: With a room created, messages can be sent using the `/chat/messages` endpoint.
