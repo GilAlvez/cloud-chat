@@ -1,5 +1,11 @@
 import { dynamodbClient } from "@/libs/dynamodb-client";
-import { PutCommand, type DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { type CreateMessageParams } from "@/types/create-message-params";
+import {
+  PutCommand,
+  QueryCommand,
+  ScanCommand,
+  type DynamoDBDocumentClient,
+} from "@aws-sdk/lib-dynamodb";
 import { randomUUID } from "node:crypto";
 
 export class ChatService {
@@ -31,5 +37,63 @@ export class ChatService {
     await this.client.send(command);
 
     return command.input.Item;
+  }
+
+  public async listRooms(): Promise<Array<Record<string, any>> | undefined> {
+    const command = new ScanCommand({
+      TableName: this.tableName,
+      FilterExpression: "begins_with(pk, #RoomPK) AND begins_with(sk, #RoomSK)",
+      ExpressionAttributeValues: {
+        "#RoomPK": this.prefix.RoomPK,
+        "#RoomSK": this.prefix.RoomSK,
+      },
+    });
+
+    const { Items } = await this.client.send(command);
+
+    return Items;
+  }
+
+  public async createMessage({
+    roomId,
+    authorId,
+    type,
+    data,
+  }: CreateMessageParams): Promise<Record<string, any> | undefined> {
+    const createdAt = new Date().toISOString();
+
+    const command = new PutCommand({
+      TableName: this.tableName,
+      Item: {
+        pk: this.prefix.RoomPK + roomId,
+        sk: this.prefix.MessageSK + createdAt,
+        authorId,
+        type,
+        data,
+        createdAt,
+      },
+    });
+
+    await this.client.send(command);
+
+    return command.input.Item;
+  }
+
+  public async listMessages(
+    roomId: string,
+  ): Promise<Array<Record<string, any>> | undefined> {
+    const command = new QueryCommand({
+      TableName: this.tableName,
+      KeyConditionExpression: "pk = #RoomPK AND begins_with(sk, #MessageSK)",
+      ExpressionAttributeValues: {
+        "#RoomPK": this.prefix.RoomPK + roomId,
+        "#MessageSK": this.prefix.MessageSK,
+      },
+      ScanIndexForward: false,
+    });
+
+    const { Items } = await this.client.send(command);
+
+    return Items;
   }
 }

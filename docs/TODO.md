@@ -17,19 +17,17 @@
 # Chat
 
 - Required
-  [ ] Message Types: Text, File, Audio, Video, Image
-  [ ] Message Status: Sent, Delivered
-  [ ] Create Room
-  [ ] List Message from Room (Paginated)
-  [ ] Send Message
-  [ ] Receive Message
-  [ ] Delete Message Content
-  [ ] Notification
+  [x] Create Room
+  [x] List Rooms
+  [x] Create Message of Text
+  [x] List Message from Room
 
 - Must-Have
-  [ ] Message Types: Buttons Suggestions, System
-  [ ] Message Status: Seen
+  [ ] Message Types: File, Audio, Video, Image
+  [ ] Message Status
+  [ ] Delete Message Content
   [ ] Typing Indicator
+  [ ] Notification
   [ ] Reply Message
   [ ] Edit Message
   [ ] Delete Message
@@ -41,9 +39,9 @@
   [x] Get User Info
   [ ] Profile Photo
   [ ] Change User Info
-  [ ] Status (Manually Changed)
 
 - Must-Have
+  [ ] Status (Manually Changed)
   [ ] Preferences
   [ ] Block Other Users
   [ ] Remove Account

@@ -133,11 +133,11 @@ functions:
           method: post
           authorizer:
             name: CloudChatAuthorizer
-  list-room-messages:
-    handler: src/functions/list-room-messages.handler
+  list-messages:
+    handler: src/functions/list-messages.handler
     events:
       - httpApi:
-          path: /chat/messages/{roomId}
+          path: /chat/messages
           method: get
           authorizer:
             name: CloudChatAuthorizer
