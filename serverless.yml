@@ -41,6 +41,7 @@ provider:
         - Effect: Allow
           Action:
             - cognito-idp:AdminGetUser
+            - cognito-idp:AdminUpdateUserAttributes
           Resource: !GetAtt CloudChatUserPool.Arn
         - Effect: Allow
           Action:
@@ -107,6 +108,14 @@ functions:
       - httpApi:
           path: /profile
           method: get
+          authorizer:
+            name: CloudChatAuthorizer
+  update-profile:
+    handler: src/functions/update-profile.handler
+    events:
+      - httpApi:
+          path: /profile
+          method: patch
           authorizer:
             name: CloudChatAuthorizer
   create-room:
@@ -210,6 +219,10 @@ resources:
           - AttributeDataType: String
             Name: name
             Required: true
+            Mutable: true
+          - AttributeDataType: String
+            Name: picture
+            Required: false
             Mutable: true
         Policies:
           PasswordPolicy:

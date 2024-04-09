@@ -3,9 +3,8 @@ import { type HandlerWithAuthorizer } from "@/types/handler-with-authorizer";
 import { response } from "@/utils/response";
 import { DynamoDBServiceException } from "@aws-sdk/client-dynamodb";
 
-export const handler: HandlerWithAuthorizer = async (event) => {
+export const handler: HandlerWithAuthorizer = async () => {
   try {
-    // const userId = jwtParser(event);
     const chat = new ChatService();
 
     const data = await chat.listRooms();

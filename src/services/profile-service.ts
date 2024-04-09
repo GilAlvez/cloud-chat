@@ -1,6 +1,7 @@
 import { cognitoClient } from "@/libs/cognito-client";
 import {
   AdminGetUserCommand,
+  AdminUpdateUserAttributesCommand,
   type CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
 
@@ -29,6 +30,26 @@ export class ProfileService {
       },
       {},
     );
+
+    return userProfile;
+  }
+
+  public async updateProfile(
+    userId: string,
+    profile: Record<string, any>,
+  ): Promise<Record<string, any> | undefined> {
+    const command = new AdminUpdateUserAttributesCommand({
+      UserPoolId: this.cognitoPoolID,
+      Username: userId,
+      UserAttributes: Object.entries(profile).map(([Name, Value]) => ({
+        Name,
+        Value,
+      })),
+    });
+
+    await this.client.send(command);
+
+    const userProfile = await this.getProfile(userId);
 
     return userProfile;
   }

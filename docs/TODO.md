@@ -37,8 +37,8 @@
 
 - Required
   [x] Get User Info
-  [ ] Profile Photo
-  [ ] Change User Info
+  [x] Profile Photo
+  [x] Change User Info
 
 - Must-Have
   [ ] Status (Manually Changed)
